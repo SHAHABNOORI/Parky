@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -5,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Parky.Api.Data;
+using Parky.Api.Mappers;
+using Parky.Api.Repository;
 using Parky.Api.Repository.IRepository;
 
 namespace Parky.Api
@@ -24,8 +27,8 @@ namespace Parky.Api
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
-            services.AddScoped<INationalParkRepository, INationalParkRepository>();
-
+            services.AddScoped<INationalParkRepository, NationalParkRepository>();
+            services.AddAutoMapper(typeof(ParkyMappings));
             services.AddControllers();
         }
 
