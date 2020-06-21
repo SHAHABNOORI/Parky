@@ -26,10 +26,9 @@ namespace Parky.Api.Controllers
             var allNationalParks = _npRepo.GetNationalParks();
             var result = allNationalParks.Select(nationalPark => _mapper.Map<NationalPark>(nationalPark));
             return Ok(result);
-        } 
+        }
 
         [HttpGet("{nationalParkId:int}")]
-
         public IActionResult GetNationalPark(int nationalParkId)
         {
             var nationalPark = _npRepo.GetNationalPark(nationalParkId);
@@ -38,6 +37,32 @@ namespace Parky.Api.Controllers
 
             var result = _mapper.Map<NationalParkDto>(nationalPark);
             return Ok(result);
+        }
+
+        [HttpPost]
+        public IActionResult CreateNationalPark([FromBody] NationalParkDto nationalPark)
+        {
+            if (nationalPark == null)
+                return BadRequest(ModelState);
+
+            if (_npRepo.NationalParkExists(nationalPark.Name))
+            {
+                ModelState.AddModelError("", "National Park Exists!");
+                return StatusCode(404, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var nationalParkObj = _mapper.Map<NationalPark>(nationalPark);
+
+            if (!_npRepo.CreateNationalPark(nationalParkObj))
+            {
+                ModelState.AddModelError("", $"Something went wrong when saving the record {nationalParkObj.Name}");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok();
         }
 
     }
