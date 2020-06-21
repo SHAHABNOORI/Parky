@@ -1,5 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Parky.Api.Models;
+using Parky.Api.Models.Dtos;
 using Parky.Api.Repository.IRepository;
 
 namespace Parky.Api.Controllers
@@ -21,7 +24,20 @@ namespace Parky.Api.Controllers
         public IActionResult GetNationalParks()
         {
             var allNationalParks = _npRepo.GetNationalParks();
-            return Ok(allNationalParks);
+            var result = allNationalParks.Select(nationalPark => _mapper.Map<NationalPark>(nationalPark));
+            return Ok(result);
+        } 
+
+        [HttpGet("{nationalParkId:int}")]
+
+        public IActionResult GetNationalPark(int nationalParkId)
+        {
+            var nationalPark = _npRepo.GetNationalPark(nationalParkId);
+            if (nationalPark == null)
+                return NotFound();
+
+            var result = _mapper.Map<NationalParkDto>(nationalPark);
+            return Ok(result);
         }
 
     }
