@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Parky.Api.Data;
 using Parky.Api.Mappers;
 using Parky.Api.Repository;
@@ -37,7 +38,18 @@ namespace Parky.Api
                 options.SwaggerDoc("ParkyOpenApiSpec", new Microsoft.OpenApi.Models.OpenApiInfo()
                 {
                     Title = "Parky Api",
-                    Version = "1"
+                    Version = "1",
+                    Description = "My Parky Api",
+                    Contact = new OpenApiContact()
+                    {
+                        Email = "NooriGoodarzi@gmail.com",
+                        Name = "Shahab Noori Goodarzi"
+                    },
+                    License = new OpenApiLicense()
+                    {
+                        Name = "MIT License",
+                        Url = new Uri("https://en.wikipedia.org/wiki/MIT_License")
+                    }
                 });
                 var xmlCommentFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var cmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFile);
